@@ -16,20 +16,5 @@
   "htmlWhitespaceSensitivity": "css",
   "endOfLine": "lf",
   "embeddedLanguageFormatting": "auto",
-  "singleAttributePerLine": true,
-
-  "importOrder": [
-    "^react/(.*)$",
-    "^next/(.*)$",
-    "^@mui/(.*)$",
-    "^contexts/(.*)$",
-    "^components/(.*)$",
-    "^models$",
-    "^config/(.*)$",
-    "^styles/(.*)$",
-    "^[./]"
-  ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
-
+  "singleAttributePerLine": true
 }
