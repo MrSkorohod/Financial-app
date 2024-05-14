@@ -14,7 +14,7 @@
   "arrowParens": "always",
   "proseWrap": "always",
   "htmlWhitespaceSensitivity": "css",
-  "endOfLine": "lf",
+  "endOfLine": "crlf",
   "embeddedLanguageFormatting": "auto",
   "singleAttributePerLine": true
 }

@@ -1,3 +1,6 @@
+import Header from '@/components/header/Header';
+import MainThemeContext from '@/contexts/MainThemeContext';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -5,7 +8,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <MainThemeContext>
+          <Header />
+          {children}
+        </MainThemeContext>
+      </body>
     </html>
   );
 }
