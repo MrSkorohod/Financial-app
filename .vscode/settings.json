@@ -7,7 +7,7 @@
 
   "prettier.arrowParens": "always",
   "prettier.bracketSpacing": true,
-  "prettier.endOfLine": "lf",
+  "prettier.endOfLine": "crlf",
   "prettier.htmlWhitespaceSensitivity": "css",
   "prettier.insertPragma": false,
   "prettier.jsxSingleQuote": true,
