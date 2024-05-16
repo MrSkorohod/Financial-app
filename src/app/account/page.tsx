@@ -1,5 +1,11 @@
+'use client';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { Typography } from '@mui/material';
 
 export default function Account() {
-  return <Typography>Account Page</Typography>;
+  return (
+    <ProtectedRoute permissionRule={() => false}>
+      <Typography>Account Page</Typography>
+    </ProtectedRoute>
+  );
 }
