@@ -5,21 +5,17 @@ import { PropsWithChildren, createContext, useContext } from 'react';
 
 interface AuthContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({
   user: null,
-  setUser: () => {},
 });
 
 export default function AuthProvider({ children }: PropsWithChildren) {
-  const { user, setUser } = useAuth();
+  const { user } = useAuth();
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
   );
 }
 

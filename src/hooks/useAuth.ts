@@ -3,7 +3,7 @@ import useLocalStorage from './useLocalStorage';
 import useUser, { User } from './useUser';
 
 export default function useAuth() {
-  const { user, addUser, removeUser, setUser } = useUser();
+  const { user, addUser, removeUser } = useUser();
   const { getItem, setItem } = useLocalStorage();
 
   useEffect(() => {
@@ -23,5 +23,5 @@ export default function useAuth() {
     setItem('user', '');
   }
 
-  return { user, login, logout, setUser };
+  return { user, login, logout };
 }
