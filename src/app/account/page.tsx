@@ -1,5 +1,6 @@
 'use client';
 import { getAccounts } from '@/api/account';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { Typography } from '@mui/material';
 import { useLayoutEffect, useRef, useState } from 'react';
 
@@ -17,5 +18,9 @@ export default function Account() {
   }, []);
 
   console.log(accounts);
-  return <Typography>Account Page</Typography>;
+  return (
+    <ProtectedRoute permissionRule={() => false}>
+      <Typography>Account Page</Typography>
+    </ProtectedRoute>
+  );
 }

@@ -12,18 +12,16 @@ export interface User {
 }
 
 export default function useUser() {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { setItem } = useLocalStorage();
 
   function addUser(user: User) {
-    setUser(user);
     setItem('user', JSON.stringify(user));
   }
 
   function removeUser() {
-    setUser(null);
     setItem('user', '');
   }
 
-  return { user, addUser, removeUser, setUser };
+  return { user, addUser, removeUser };
 }
