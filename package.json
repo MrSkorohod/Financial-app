@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky",
-    "postinstall": "npm run prepare"
+    "postinstall": "npm run prepare",
+    "start:db": "npx json-server database/db.json -p 3001"
   },
   "dependencies": {
     "@emotion/cache": "^11.11.0",
@@ -18,6 +19,8 @@
     "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.17",
     "@mui/material-nextjs": "^5.15.11",
+    "axios": "^1.6.8",
+    "json-server": "^1.0.0-beta.0",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
