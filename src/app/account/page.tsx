@@ -1,26 +1,22 @@
 'use client';
-import { getAccounts } from '@/api/account';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Typography } from '@mui/material';
-import { useLayoutEffect, useRef, useState } from 'react';
-
-interface Account {}
+import { useGetAccountsQuery } from '@/lib/features/api/apiSlice';
+import { CircularProgress, Typography } from '@mui/material';
+import { QueryStatus } from '@reduxjs/toolkit/query';
 
 export default function Account() {
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const initialized = useRef(false);
+  const { status, data: account } = useGetAccountsQuery('api');
 
-  useLayoutEffect(() => {
-    if (!initialized.current) {
-      initialized.current = true;
-      getAccounts().then(setAccounts);
-    }
-  }, []);
-
-  console.log(accounts);
   return (
-    <ProtectedRoute permissionRule={() => false}>
+    <ProtectedRoute permissionRule={() => true}>
       <Typography>Account Page</Typography>
+      {status === QueryStatus.fulfilled ? (
+        account?.map((item, idx) => {
+          return <Typography key={idx}>{item.name}</Typography>;
+        })
+      ) : (
+        <CircularProgress />
+      )}
     </ProtectedRoute>
   );
 }
