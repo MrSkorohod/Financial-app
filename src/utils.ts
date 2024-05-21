@@ -12,3 +12,8 @@ export interface Account {
   value: number;
   name: string;
 }
+
+export type AuthState = {
+  user: User | null;
+  token: string | null;
+};

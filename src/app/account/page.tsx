@@ -8,7 +8,7 @@ export default function Account() {
   const { status, data: account } = useGetAccountsQuery('api');
 
   return (
-    <ProtectedRoute permissionRule={() => true}>
+    <ProtectedRoute>
       <Typography>Account Page</Typography>
       {status === QueryStatus.fulfilled ? (
         account?.map((item, idx) => {

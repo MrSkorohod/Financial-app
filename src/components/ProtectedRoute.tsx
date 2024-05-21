@@ -5,26 +5,21 @@ import { useEffect } from 'react';
 
 interface ProtectRouteProps {
   children: React.ReactNode;
-  permissionRule?: () => boolean;
+  permissionRule?: boolean;
 }
-//TODO Add more pages
-const publicPages = ['/'];
-
 export default function ProtectedRoute({
   children,
-  permissionRule,
+  permissionRule = true,
 }: ProtectRouteProps) {
   const { user } = useAuth();
   const route = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    //TODO Add more specific rules
-
-    const isAllowed = permissionRule ? permissionRule() : true;
-    if (user || publicPages.includes(pathname) || isAllowed) return;
+    console.log(user);
+    if (user || permissionRule) return;
     route.replace('/');
   }, [user, route, pathname, permissionRule]);
 
-  return permissionRule && permissionRule() ? children : <></>;
+  return permissionRule ? children : <></>;
 }
