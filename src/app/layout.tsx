@@ -1,6 +1,6 @@
 import Header from '@/components/header/Header';
-import AuthProvider from '@/contexts/AuthContext';
 import MainThemeContext from '@/contexts/MainThemeContext';
+import StoreProvider from '../contexts/StoreProvider';
 
 export default function RootLayout({
   children,
@@ -11,10 +11,8 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <MainThemeContext>
-          <AuthProvider>
-            <Header />
-            {children}
-          </AuthProvider>
+          <Header />
+          <StoreProvider>{children}</StoreProvider>
         </MainThemeContext>
       </body>
     </html>

@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": "1"
+    }
+  ],
+  "accounts": [
+    {
+      "id": 1,
+      "name": "Test1",
+      "value": 10
+    },
+    {
+      "id": 2,
+      "name": "Test2",
+      "value": 50
+    }
+  ]
+
+}

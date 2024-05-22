@@ -1,27 +1,9 @@
-import { useContext } from 'react';
-import { AuthContext } from '@/contexts/AuthContext';
-import useLocalStorage from './useLocalStorage';
-//This hook need for store user in context and used only in AuthContext
-
-//TODO replace this
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  authToken?: string;
-}
+import { selectUser } from '@/lib/features/user/userSlice';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function useUser() {
-  const { user } = useContext(AuthContext);
-  const { setItem } = useLocalStorage();
+  const user = useSelector(selectUser);
 
-  function addUser(user: User) {
-    setItem('user', JSON.stringify(user));
-  }
-
-  function removeUser() {
-    setItem('user', '');
-  }
-
-  return { user, addUser, removeUser };
+  return useMemo(() => ({ user }), [user]);
 }
