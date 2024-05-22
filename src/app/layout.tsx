@@ -1,6 +1,6 @@
 import Header from '@/components/header/Header';
 import MainThemeContext from '@/contexts/MainThemeContext';
-import StoreProvider from '../contexts/StroeProvider';
+import StoreProvider from '../contexts/StoreProvider';
 
 export default function RootLayout({
   children,

@@ -1,5 +1,5 @@
 'use client';
-import useAuth from '@/hooks/useAuth';
+import useUser from '@/hooks/useUser';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -11,12 +11,11 @@ export default function ProtectedRoute({
   children,
   permissionRule = true,
 }: ProtectRouteProps) {
-  const { user } = useAuth();
+  const { user } = useUser();
   const route = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    console.log(user);
     if (user || permissionRule) return;
     route.replace('/');
   }, [user, route, pathname, permissionRule]);

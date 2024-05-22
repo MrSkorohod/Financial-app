@@ -4,7 +4,6 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  authToken?: string;
 }
 
 export interface Account {
@@ -13,7 +12,4 @@ export interface Account {
   name: string;
 }
 
-export type AuthState = {
-  user: User | null;
-  token: string | null;
-};
+export type AuthToken = string | null;
