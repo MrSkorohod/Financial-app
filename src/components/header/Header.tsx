@@ -13,11 +13,20 @@ import AccountBalanceWalletTwoToneIcon from '@mui/icons-material/AccountBalanceW
 import NextLink from 'next/link';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/firebase-config';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { selectIsAuthenticated } from '@/lib/features/auth/authSlice';
+import { logout } from '@/lib/features/auth/authSlice';
+import { useRouter } from 'next/navigation';
 
 const pages = ['Dashboard', 'Account'];
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const dispatch = useAppDispatch();
+  const route = useRouter();
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -26,6 +35,14 @@ export default function Header() {
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const logoutUser = async () => {
+    await signOut(auth)
+      .then(() => dispatch(logout()))
+      .then(() => route.replace('/login'));
+  };
+
+  if (!isAuthenticated) return;
 
   return (
     <AppBar position="static">
@@ -74,6 +91,7 @@ export default function Header() {
         >
           <MenuItem onClick={handleClose}>Profile</MenuItem>
           <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem onClick={logoutUser}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

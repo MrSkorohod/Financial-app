@@ -11,8 +11,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <MainThemeContext>
-          <Header />
-          <StoreProvider>{children}</StoreProvider>
+          <StoreProvider>
+            <Header />
+            {children}
+          </StoreProvider>
         </MainThemeContext>
       </body>
     </html>

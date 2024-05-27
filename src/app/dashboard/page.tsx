@@ -1,5 +1,10 @@
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { Typography } from '@mui/material';
 
 export default function Dashboard() {
-  return <Typography>Dashboard Page</Typography>;
+  return (
+    <ProtectedRoute>
+      <Typography>Dashboard Page</Typography>
+    </ProtectedRoute>
+  );
 }
