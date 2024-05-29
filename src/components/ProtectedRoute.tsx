@@ -1,8 +1,8 @@
 'use client';
 import { selectIsAuthenticated } from '@/lib/features/auth/authSlice';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useAppSelector } from '@/lib/hooks';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 interface ProtectRouteProps {
   children: React.ReactNode;
@@ -17,11 +17,18 @@ export default function ProtectedRoute({
   const route = useRouter();
   const pathname = usePathname();
 
-  const dispatch = useAppDispatch();
+  useLayoutEffect(() => {
+    console.log(pathname);
+    if (isAuthenticated && pathname.includes('login')) {
+      route.replace('/');
+      return;
+    }
 
-  useEffect(() => {
-    if (isAuthenticated && permissionRule) return;
-  }, [isAuthenticated, route, pathname, permissionRule, dispatch]);
+    if (isAuthenticated && permissionRule) {
+      return;
+    }
+    route.replace('/login');
+  }, [isAuthenticated, route, pathname, permissionRule]);
 
-  return isAuthenticated && permissionRule ? children : <></>;
+  return children;
 }

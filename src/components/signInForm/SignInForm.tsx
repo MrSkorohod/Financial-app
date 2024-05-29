@@ -1,40 +1,30 @@
 'use client';
-import { auth } from '@/firebase-config';
-import { useAppDispatch } from '@/lib/hooks';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
-import { login } from '@/lib/features/auth/authSlice';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { SubmitHandler, useForm } from 'react-hook-form';
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 export default function SignInForm() {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const dispatch = useAppDispatch();
-  const route = useRouter();
+  const { logIn, registerUser } = useAuthContext();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
 
-  const createOrLoginUser = async (isNewUser = false) => {
-    const loginUser = isNewUser
-      ? createUserWithEmailAndPassword(auth, email, password)
-      : signInWithEmailAndPassword(auth, email, password);
+  const onSubmit: SubmitHandler<FormValues> = (data: {
+    email: string;
+    password: string;
+  }) => logIn(data.email, data.password);
 
-    await loginUser
-      .then((userCredential) => {
-        const user = userCredential.user;
-        dispatch(login(user.uid));
-      })
-      .then(() => {
-        route.replace('/');
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('An error occurred: ', errorCode, errorMessage);
-      });
-  };
+  const onSubmitForCreate: SubmitHandler<FormValues> = (data: {
+    email: string;
+    password: string;
+  }) => registerUser(data.email, data.password);
 
   return (
     <Box
@@ -47,27 +37,49 @@ export default function SignInForm() {
         autoComplete="off"
         display="flex"
         flexDirection="column"
-        maxWidth="250px"
+        width="250px"
         gap="10px"
+        onSubmit={(event) => event.preventDefault()}
       >
         <TextField
-          required
           label="Email"
-          onChange={(event) => setEmail(event.target.value)}
+          {...register('email', {
+            required: 'Email is required',
+            validate: {
+              maxLength: (v) =>
+                v.length <= 50 || 'The email should have at most 50 characters',
+              matchPattern: (v) =>
+                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+                'Email address must be a valid address',
+            },
+          })}
+          aria-invalid={errors.email ? 'true' : 'false'}
+          error={!!errors.email}
+          helperText={errors.email?.message && `${errors.email.message}`}
         />
         <TextField
           label="Password"
           type="password"
-          onChange={(event) => setPassword(event.target.value)}
+          {...register('password', {
+            required: 'You must specify a password',
+            minLength: {
+              value: 6,
+              message: 'Password must have at least 8 characters',
+            },
+          })}
+          aria-invalid={errors.password ? 'true' : 'false'}
+          error={!!errors.password}
+          helperText={errors.password?.message && `${errors.password.message}`}
         />
         <Button
           variant="contained"
-          onClick={() => createOrLoginUser()}
+          type="submit"
+          onClick={handleSubmit(onSubmit)}
         >
           Login
         </Button>
         <Typography textAlign="center">or</Typography>
-        <Button onClick={() => createOrLoginUser(true)}>Create User</Button>
+        <Button onClick={handleSubmit(onSubmitForCreate)}>Create User</Button>
       </Box>
     </Box>
   );
