@@ -18,17 +18,10 @@ export default function ProtectedRoute({
   const pathname = usePathname();
 
   useLayoutEffect(() => {
-    console.log(pathname);
-    if (isAuthenticated && pathname.includes('login')) {
-      route.replace('/');
-      return;
-    }
-
     if (isAuthenticated && permissionRule) {
       return;
     }
-    route.replace('/login');
   }, [isAuthenticated, route, pathname, permissionRule]);
 
-  return children;
+  return isAuthenticated && permissionRule ? children : <></>;
 }
