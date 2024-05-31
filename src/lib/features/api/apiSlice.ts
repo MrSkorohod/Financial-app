@@ -1,4 +1,5 @@
-import { Account, apiUrl } from '@/utils';
+import { apiUrl } from '@/constants';
+import { Account } from '@/utils';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({

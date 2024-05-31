@@ -2,7 +2,7 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { emailPattern, maxEmailLength, minPasswordLength } from '@/utils';
+import { emailPattern, maxEmailLength, minPasswordLength } from '@/constants';
 
 type FormValues = {
   email: string;
