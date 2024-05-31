@@ -57,12 +57,10 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   async function logIn(email: string, password: string): Promise<void> {
     dispatch(signInThunk({ email, password }));
-    setUser(user);
   }
 
   async function registerUser(email: string, password: string): Promise<void> {
     dispatch(registerThunk({ email, password }));
-    setUser(user);
   }
 
   function logOut(): void {

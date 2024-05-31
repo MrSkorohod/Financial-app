@@ -1,5 +1,6 @@
 import { auth } from '@/firebase.config';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { FirebaseError } from 'firebase/app';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 interface UserData {
@@ -7,26 +8,22 @@ interface UserData {
   password: string;
 }
 
-interface ValidationErrors {
-  errorMessage: string;
-  field_errors: Record<string, string>;
-}
-
 export const registerThunk = createAsyncThunk<
   { uid: string },
   UserData,
   {
-    rejectValue: ValidationErrors;
+    rejectValue: FirebaseError;
   }
 >('auth/register', async (userData, { rejectWithValue }) => {
   const { email, password } = userData;
-  const result = await createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      const user = userCredential.user;
-      return { uid: user.uid };
-    })
-    .catch((error) => {
-      return rejectWithValue(error.response.data);
-    });
-  return result;
+
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    return { uid: result.user.uid };
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      return rejectWithValue(error);
+    }
+    return { uid: '' };
+  }
 });
