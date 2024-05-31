@@ -2,6 +2,7 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { emailPattern, maxEmailLength, minPasswordLength } from '@/utils';
 
 type FormValues = {
   email: string;
@@ -47,10 +48,10 @@ export default function SignInForm() {
             required: 'Email is required',
             validate: {
               maxLength: (v) =>
-                v.length <= 50 || 'The email should have at most 50 characters',
+                v.length <= maxEmailLength ||
+                'The email should have at most 50 characters',
               matchPattern: (v) =>
-                /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
-                'Email address must be a valid address',
+                emailPattern.test(v) || 'Email address must be a valid address',
             },
           })}
           aria-invalid={errors.email ? 'true' : 'false'}
@@ -63,8 +64,8 @@ export default function SignInForm() {
           {...register('password', {
             required: 'You must specify a password',
             minLength: {
-              value: 6,
-              message: 'Password must have at least 8 characters',
+              value: minPasswordLength,
+              message: 'Password must have at least 6 characters',
             },
           })}
           aria-invalid={errors.password ? 'true' : 'false'}

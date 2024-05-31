@@ -1,5 +1,5 @@
-import ProtectedRoute from '@/components/ProtectedRoute';
 import Header from '@/components/header/Header';
+import AuthProtectedRoute from '@/components/protected-routes/AuthProtectedRoute';
 
 export default function MainApplicationLayout({
   children,
@@ -7,9 +7,9 @@ export default function MainApplicationLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ProtectedRoute>
+    <AuthProtectedRoute>
       <Header />
       {children}
-    </ProtectedRoute>
+    </AuthProtectedRoute>
   );
 }

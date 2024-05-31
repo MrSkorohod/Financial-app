@@ -3,7 +3,7 @@ import { auth } from '@/firebase.config';
 import { registerThunk } from '@/lib/actionThunks/registerUser';
 import { signInThunk } from '@/lib/actionThunks/signInUser';
 import { signOutThunk } from '@/lib/actionThunks/signOutUser';
-import { getPersistenceSignIn } from '@/lib/features/auth/authSlice';
+import { setPersistenceSignIn } from '@/lib/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { CircularProgress } from '@mui/material';
 import { User, onAuthStateChanged } from 'firebase/auth';
@@ -45,10 +45,10 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUser(user);
-        dispatch(getPersistenceSignIn(user.uid));
+        dispatch(setPersistenceSignIn(user.uid));
       } else {
         setUser(null);
-        route.replace('/login');
+        dispatch(setPersistenceSignIn(''));
       }
     });
 
@@ -65,7 +65,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   function logOut(): void {
     dispatch(signOutThunk());
-    route.replace('/login');
   }
 
   return (

@@ -9,7 +9,7 @@ interface ProtectRouteProps {
   permissionRule?: boolean;
 }
 
-export default function ProtectedRoute({
+export default function AuthProtectedRoute({
   children,
   permissionRule = true,
 }: ProtectRouteProps) {
@@ -18,9 +18,10 @@ export default function ProtectedRoute({
   const pathname = usePathname();
 
   useLayoutEffect(() => {
-    if (isAuthenticated && permissionRule) {
+    if ((isAuthenticated || isAuthenticated === null) && permissionRule) {
       return;
     }
+    route.replace('/login');
   }, [isAuthenticated, route, pathname, permissionRule]);
 
   return isAuthenticated && permissionRule ? children : <></>;

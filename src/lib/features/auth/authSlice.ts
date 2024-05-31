@@ -15,9 +15,9 @@ const authSlice = createSlice({
     isSignIn: false,
   },
   reducers: {
-    getPersistenceSignIn(state, action) {
+    setPersistenceSignIn(state, action) {
       state.isSignIn = true;
-      state.token = action.payload;
+      state.token = action.payload || '';
     },
   },
   extraReducers: (builder) => {
@@ -27,7 +27,7 @@ const authSlice = createSlice({
       })
       .addCase(signInThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.uid;
+        state.token = action.payload.uid || '';
       });
     builder
       .addCase(signOutThunk.pending, (state) => {
@@ -36,7 +36,7 @@ const authSlice = createSlice({
       .addCase(signOutThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.isSignIn = action.payload;
-        state.token = null;
+        state.token = '';
       });
     builder
       .addCase(registerThunk.pending, (state) => {
@@ -44,15 +44,18 @@ const authSlice = createSlice({
       })
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.token = action.payload.uid;
+        state.token = action.payload.uid || '';
       });
   },
 });
 
-export const { getPersistenceSignIn } = authSlice.actions;
+export const { setPersistenceSignIn } = authSlice.actions;
 
 export default authSlice.reducer;
 
 export const selectToken = (state: RootState) => state.auth.token;
 
-export const selectIsAuthenticated = (state: RootState) => !!state.auth.token;
+export const selectIsAuthenticated = (state: RootState) => {
+  const token = state.auth.token;
+  return token === null ? null : !!token;
+};
