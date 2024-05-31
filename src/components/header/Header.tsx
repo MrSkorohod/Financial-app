@@ -13,11 +13,13 @@ import AccountBalanceWalletTwoToneIcon from '@mui/icons-material/AccountBalanceW
 import NextLink from 'next/link';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
+import { useAuthContext } from '@/contexts/AuthContext';
 
 const pages = ['Dashboard', 'Account'];
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { logOut } = useAuthContext();
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -74,6 +76,7 @@ export default function Header() {
         >
           <MenuItem onClick={handleClose}>Profile</MenuItem>
           <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem onClick={logOut}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
