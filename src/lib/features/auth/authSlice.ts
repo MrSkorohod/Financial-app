@@ -10,7 +10,8 @@ const authSlice = createSlice({
   initialState: {
     token: null as AuthToken,
     loading: false,
-    error: null,
+    error: false,
+    errorMessage: '',
     success: false,
     isSignIn: false,
   },
@@ -24,11 +25,21 @@ const authSlice = createSlice({
     builder
       .addCase(signInThunk.pending, (state) => {
         state.loading = true;
+        state.isSignIn = false;
+      })
+      .addCase(signInThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.token = '';
+        state.error = true;
+        state.isSignIn = false;
+        state.errorMessage = action.payload?.message || '';
       })
       .addCase(signInThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.uid || '';
+        state.isSignIn = true;
       });
+
     builder
       .addCase(signOutThunk.pending, (state) => {
         state.loading = true;

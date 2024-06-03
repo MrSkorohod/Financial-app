@@ -5,7 +5,6 @@ import { signInThunk } from '@/lib/actionThunks/signInUser';
 import { signOutThunk } from '@/lib/actionThunks/signOutUser';
 import { setPersistenceSignIn } from '@/lib/features/auth/authSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { CircularProgress } from '@mui/material';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import {
@@ -15,6 +14,7 @@ import {
   useEffect,
   useState,
 } from 'react';
+import { toast } from 'react-toastify';
 
 const noop = () => {};
 
@@ -39,7 +39,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   const route = useRouter();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state) => state.auth);
+  const { error } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -52,8 +52,12 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       }
     });
 
+    if (error) {
+      toast.warn('Error!');
+    }
+
     return () => unsubscribe();
-  }, [dispatch, route]);
+  }, [dispatch, route, error]);
 
   async function logIn(email: string, password: string): Promise<void> {
     dispatch(signInThunk({ email, password }));
@@ -69,7 +73,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <AuthContext.Provider value={{ user, logIn, registerUser, logOut }}>
-      {loading ? <CircularProgress /> : children}
+      {children}
     </AuthContext.Provider>
   );
 };

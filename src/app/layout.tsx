@@ -1,6 +1,7 @@
 import MainThemeContext from '@/contexts/MainThemeContext';
-import StoreProvider from '../contexts/StoreProvider';
+import StoreProvider from '@/contexts/StoreProvider';
 import { AuthContextProvider } from '@/contexts/AuthContext';
+import 'react-toastify/ReactToastify.min.css';
 
 export default function RootLayout({
   children,
