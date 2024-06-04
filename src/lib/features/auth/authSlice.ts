@@ -1,9 +1,11 @@
+import { getErrorMessageByCode } from '@/errorCodes';
 import { registerThunk } from '@/lib/actionThunks/registerUser';
 import { signInThunk } from '@/lib/actionThunks/signInUser';
 import { signOutThunk } from '@/lib/actionThunks/signOutUser';
 import { RootState } from '@/lib/store';
 import { AuthToken } from '@/utils';
 import { createSlice } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 
 const authSlice = createSlice({
   name: 'auth',
@@ -32,7 +34,12 @@ const authSlice = createSlice({
         state.token = '';
         state.error = true;
         state.isSignIn = false;
-        state.errorMessage = action.payload?.message || '';
+        state.errorMessage = getErrorMessageByCode(action.payload);
+
+        toast.error(getErrorMessageByCode(action.payload), {
+          autoClose: false,
+          theme: 'colored',
+        });
       })
       .addCase(signInThunk.fulfilled, (state, action) => {
         state.loading = false;
@@ -56,6 +63,18 @@ const authSlice = createSlice({
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.uid || '';
+      })
+      .addCase(registerThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.token = '';
+        state.error = true;
+        state.isSignIn = false;
+        state.errorMessage = getErrorMessageByCode(action.payload);
+
+        toast.error(getErrorMessageByCode(action.payload), {
+          autoClose: false,
+          theme: 'colored',
+        });
       });
   },
 });

@@ -3,6 +3,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { emailPattern, maxEmailLength, minPasswordLength } from '@/constants';
+import { useAppSelector } from '@/lib/hooks';
 
 type FormValues = {
   email: string;
@@ -11,11 +12,15 @@ type FormValues = {
 
 export default function SignInForm() {
   const { logIn, registerUser } = useAuthContext();
+  const { loading } = useAppSelector((state) => state.auth);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    mode: 'onBlur',
+  });
 
   const onSubmit: SubmitHandler<FormValues> = (data: {
     email: string;
@@ -57,6 +62,7 @@ export default function SignInForm() {
           aria-invalid={errors.email ? 'true' : 'false'}
           error={!!errors.email}
           helperText={errors.email?.message && `${errors.email.message}`}
+          disabled={loading}
         />
         <TextField
           label="Password"
@@ -71,16 +77,23 @@ export default function SignInForm() {
           aria-invalid={errors.password ? 'true' : 'false'}
           error={!!errors.password}
           helperText={errors.password?.message && `${errors.password.message}`}
+          disabled={loading}
         />
         <Button
           variant="contained"
           type="submit"
           onClick={handleSubmit(onSubmit)}
+          disabled={loading}
         >
           Login
         </Button>
         <Typography textAlign="center">or</Typography>
-        <Button onClick={handleSubmit(onSubmitForCreate)}>Create User</Button>
+        <Button
+          onClick={handleSubmit(onSubmitForCreate)}
+          disabled={loading}
+        >
+          Create User
+        </Button>
       </Box>
     </Box>
   );

@@ -1,3 +1,4 @@
+import { FirebaseErrorCode } from '@/errorCodes';
 import { auth } from '@/firebase.config';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FirebaseError } from 'firebase/app';
@@ -12,7 +13,7 @@ export const registerThunk = createAsyncThunk<
   { uid: string },
   UserData,
   {
-    rejectValue: FirebaseError;
+    rejectValue: FirebaseErrorCode;
   }
 >('auth/register', async (userData, { rejectWithValue }) => {
   const { email, password } = userData;
@@ -22,7 +23,7 @@ export const registerThunk = createAsyncThunk<
     return { uid: result.user.uid };
   } catch (error) {
     if (error instanceof FirebaseError) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.code as FirebaseErrorCode);
     }
     return { uid: '' };
   }

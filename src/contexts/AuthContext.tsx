@@ -4,7 +4,7 @@ import { registerThunk } from '@/lib/actionThunks/registerUser';
 import { signInThunk } from '@/lib/actionThunks/signInUser';
 import { signOutThunk } from '@/lib/actionThunks/signOutUser';
 import { setPersistenceSignIn } from '@/lib/features/auth/authSlice';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
+import { useAppDispatch } from '@/lib/hooks';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import {
@@ -14,7 +14,6 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { toast } from 'react-toastify';
 
 const noop = () => {};
 
@@ -39,7 +38,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   const route = useRouter();
   const dispatch = useAppDispatch();
-  const { error } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -51,13 +49,8 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         dispatch(setPersistenceSignIn(''));
       }
     });
-
-    if (error) {
-      toast.warn('Error!');
-    }
-
     return () => unsubscribe();
-  }, [dispatch, route, error]);
+  }, [dispatch, route]);
 
   async function logIn(email: string, password: string): Promise<void> {
     dispatch(signInThunk({ email, password }));
