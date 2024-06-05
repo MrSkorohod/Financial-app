@@ -1,3 +1,6 @@
+export enum CommonErrorCode {
+  UnexpectedErr = 'unexpected-error',
+}
 export enum FirebaseErrorCode {
   InvalidCredential = 'auth/invalid-credential',
   ErrorInUse = 'auth/email-already-in-use',
@@ -6,16 +9,16 @@ export enum FirebaseErrorCode {
 
 export const errorMessageByCode: {
   [key in FirebaseErrorCode]: string;
+} & {
+  [key in CommonErrorCode]: string;
 } = {
-  [FirebaseErrorCode.InvalidCredential]:
-    'Invalid credential. Please try again late',
-  [FirebaseErrorCode.ErrorInUse]:
-    'The provided email is already in use by an existing user',
-  [FirebaseErrorCode.TooManyRequests]:
-    'The number of requests exceeds the maximum allowed. Please try again late',
+  [FirebaseErrorCode.InvalidCredential]: 'ErrorMessages.InvalidCredential',
+  [FirebaseErrorCode.ErrorInUse]: 'ErrorMessages.ErrorInUse',
+  [FirebaseErrorCode.TooManyRequests]: 'ErrorMessages.TooManyRequests',
+  [CommonErrorCode.UnexpectedErr]: 'ErrorMessages.UnexpectedErr',
 };
 
-type ErrorCode = FirebaseErrorCode | undefined;
+type ErrorCode = FirebaseErrorCode | CommonErrorCode | undefined;
 
 export const getErrorMessageByCode = (code: ErrorCode): string =>
-  code ? errorMessageByCode[code] : 'Unexpected error';
+  code ? errorMessageByCode[code] : CommonErrorCode.UnexpectedErr;

@@ -1,0 +1,8 @@
+{
+  "ErrorMessages": {
+    "InvalidCredential": "Invalid credential. Please try again later",
+    "ErrorInUse": "The provided email is already in use by an existing user",
+    "TooManyRequests": "The number of requests exceeds the maximum allowed. Please try again later",
+    "UnexpectedErr": "Unexpected error. Please try again later"
+  }
+}

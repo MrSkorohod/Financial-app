@@ -1,4 +1,5 @@
 'use client';
+import ErrorAlert from '@/components/error-alert/ErrorAlert';
 import LoginProtectedRoute from '@/components/protected-routes/LoginProtectedRoute';
 import SignInForm from '@/components/signInForm/SignInForm';
 import { useAppSelector } from '@/lib/hooks';
@@ -10,6 +11,7 @@ export default function Login() {
   return (
     <LoginProtectedRoute>
       <Box sx={{ position: 'relative' }}>
+        <ErrorAlert />
         <Box
           sx={{
             margin: '100px auto',

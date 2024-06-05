@@ -5,7 +5,6 @@ import { signOutThunk } from '@/lib/actionThunks/signOutUser';
 import { RootState } from '@/lib/store';
 import { AuthToken } from '@/utils';
 import { createSlice } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
 
 const authSlice = createSlice({
   name: 'auth',
@@ -28,6 +27,7 @@ const authSlice = createSlice({
       .addCase(signInThunk.pending, (state) => {
         state.loading = true;
         state.isSignIn = false;
+        state.error = false;
       })
       .addCase(signInThunk.rejected, (state, action) => {
         state.loading = false;
@@ -35,16 +35,12 @@ const authSlice = createSlice({
         state.error = true;
         state.isSignIn = false;
         state.errorMessage = getErrorMessageByCode(action.payload);
-
-        toast.error(getErrorMessageByCode(action.payload), {
-          autoClose: false,
-          theme: 'colored',
-        });
       })
       .addCase(signInThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.uid || '';
         state.isSignIn = true;
+        state.error = false;
       });
 
     builder
@@ -55,13 +51,22 @@ const authSlice = createSlice({
         state.loading = false;
         state.isSignIn = action.payload;
         state.token = '';
+      })
+      .addCase(signOutThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.token = '';
+        state.error = true;
+        state.isSignIn = false;
+        state.errorMessage = getErrorMessageByCode(action.payload);
       });
     builder
       .addCase(registerThunk.pending, (state) => {
         state.loading = true;
+        state.error = false;
       })
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.loading = false;
+        state.error = false;
         state.token = action.payload.uid || '';
       })
       .addCase(registerThunk.rejected, (state, action) => {
@@ -70,11 +75,6 @@ const authSlice = createSlice({
         state.error = true;
         state.isSignIn = false;
         state.errorMessage = getErrorMessageByCode(action.payload);
-
-        toast.error(getErrorMessageByCode(action.payload), {
-          autoClose: false,
-          theme: 'colored',
-        });
       });
   },
 });
