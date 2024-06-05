@@ -1,7 +1,7 @@
 import { useAppSelector } from '@/lib/hooks';
 import { Alert, Snackbar } from '@mui/material';
 import { useEffect, useState } from 'react';
-import Message from '../message/Message';
+import InternationalizationText from '../internationalizationText/InternationalizationText';
 
 export default function ErrorAlert() {
   const { error, errorMessage } = useAppSelector((state) => state.auth);
@@ -30,7 +30,7 @@ export default function ErrorAlert() {
           variant="filled"
           sx={{ width: '100%' }}
         >
-          <Message path={errorMessage} />
+          <InternationalizationText path={errorMessage} />
         </Alert>
       </Snackbar>
     )

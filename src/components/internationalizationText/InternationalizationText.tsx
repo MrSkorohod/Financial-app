@@ -1,10 +1,12 @@
 import { useTranslations } from 'next-intl';
 
-type MessageProps = {
+type InternationalizationProps = {
   path: string;
 };
 
-export default function Message({ path }: MessageProps) {
+export default function InternationalizationText({
+  path,
+}: InternationalizationProps) {
   const [namespace, message] = (path || '').split('.');
   const translate = useTranslations(namespace);
   return translate(message);
