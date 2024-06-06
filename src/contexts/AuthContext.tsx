@@ -4,8 +4,7 @@ import { registerThunk } from '@/lib/actionThunks/registerUser';
 import { signInThunk } from '@/lib/actionThunks/signInUser';
 import { signOutThunk } from '@/lib/actionThunks/signOutUser';
 import { setPersistenceSignIn } from '@/lib/features/auth/authSlice';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { CircularProgress } from '@mui/material';
+import { useAppDispatch } from '@/lib/hooks';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import {
@@ -39,7 +38,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   const route = useRouter();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -51,7 +49,6 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
         dispatch(setPersistenceSignIn(''));
       }
     });
-
     return () => unsubscribe();
   }, [dispatch, route]);
 
@@ -69,7 +66,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
 
   return (
     <AuthContext.Provider value={{ user, logIn, registerUser, logOut }}>
-      {loading ? <CircularProgress /> : children}
+      {children}
     </AuthContext.Provider>
   );
 };

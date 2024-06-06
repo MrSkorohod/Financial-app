@@ -1,3 +1,4 @@
+import { CommonErrorCode, FirebaseErrorCode } from '@/errorCodes';
 import { auth } from '@/firebase.config';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { FirebaseError } from 'firebase/app';
@@ -12,7 +13,7 @@ export const signInThunk = createAsyncThunk<
   { uid: string },
   UserData,
   {
-    rejectValue: FirebaseError;
+    rejectValue: FirebaseErrorCode | CommonErrorCode;
   }
 >('auth/sign-in', async (userData, { rejectWithValue }) => {
   const { email, password } = userData;
@@ -22,8 +23,8 @@ export const signInThunk = createAsyncThunk<
     return { uid: result.user.uid };
   } catch (error) {
     if (error instanceof FirebaseError) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.code as FirebaseErrorCode);
     }
-    return { uid: '' };
+    return rejectWithValue(CommonErrorCode.UnexpectedErr);
   }
 });

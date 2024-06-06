@@ -3,6 +3,9 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { emailPattern, maxEmailLength, minPasswordLength } from '@/constants';
+import { useAppSelector } from '@/lib/hooks';
+import I18nText from '../i18nText/I18nText';
+import useI18n from '@/hooks/useI18n';
 
 type FormValues = {
   email: string;
@@ -11,11 +14,21 @@ type FormValues = {
 
 export default function SignInForm() {
   const { logIn, registerUser } = useAuthContext();
+  const { loading } = useAppSelector((state) => state.auth);
+
+  const emailRequired = useI18n('ErrorMessages.EmailRequired');
+  const emailMaxLength = useI18n('ErrorMessages.EmailMaxLength', {
+    maxEmailLength: String(maxEmailLength),
+  });
+  const emailValid = useI18n('ErrorMessages.EmailValid');
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({
+    mode: 'onBlur',
+  });
 
   const onSubmit: SubmitHandler<FormValues> = (data: {
     email: string;
@@ -43,44 +56,56 @@ export default function SignInForm() {
         onSubmit={(event) => event.preventDefault()}
       >
         <TextField
-          label="Email"
+          label={I18nText({ path: 'LoginPage.Email' })}
           {...register('email', {
-            required: 'Email is required',
+            required: emailRequired,
             validate: {
-              maxLength: (v) =>
-                v.length <= maxEmailLength ||
-                'The email should have at most 50 characters',
-              matchPattern: (v) =>
-                emailPattern.test(v) || 'Email address must be a valid address',
+              maxLength: (v) => v.length <= maxEmailLength || emailMaxLength,
+              matchPattern: (v) => emailPattern.test(v) || emailValid,
             },
           })}
           aria-invalid={errors.email ? 'true' : 'false'}
           error={!!errors.email}
           helperText={errors.email?.message && `${errors.email.message}`}
+          disabled={loading}
         />
         <TextField
-          label="Password"
+          label={I18nText({ path: 'LoginPage.Password' })}
           type="password"
           {...register('password', {
-            required: 'You must specify a password',
+            required: I18nText({
+              path: 'ErrorMessages.PasswordSpecify',
+            }),
             minLength: {
               value: minPasswordLength,
-              message: 'Password must have at least 6 characters',
+              message: I18nText({
+                path: 'ErrorMessages.PasswordMinLength',
+                option: { minPasswordLength: String(minPasswordLength) },
+              }),
             },
           })}
           aria-invalid={errors.password ? 'true' : 'false'}
           error={!!errors.password}
           helperText={errors.password?.message && `${errors.password.message}`}
+          disabled={loading}
         />
         <Button
           variant="contained"
           type="submit"
           onClick={handleSubmit(onSubmit)}
+          disabled={loading}
         >
-          Login
+          <I18nText path={'LoginPage.Login'} />
         </Button>
-        <Typography textAlign="center">or</Typography>
-        <Button onClick={handleSubmit(onSubmitForCreate)}>Create User</Button>
+        <Typography textAlign="center">
+          <I18nText path={'LoginPage.Or'} />
+        </Typography>
+        <Button
+          onClick={handleSubmit(onSubmitForCreate)}
+          disabled={loading}
+        >
+          <I18nText path={'LoginPage.CreateUser'} />
+        </Button>
       </Box>
     </Box>
   );
