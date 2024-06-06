@@ -1,14 +1,11 @@
 'use client';
-import { useTranslations } from 'next-intl';
-import { useMemo } from 'react';
+import useI18n from '@/hooks/useI18n';
 
 type InternationalizationProps = {
   path: string;
+  option?: Record<string, string>;
 };
 
-export default function I18nText({ path }: InternationalizationProps) {
-  const [namespace, message] = (path || '').split('.');
-  const translate = useTranslations(namespace);
-
-  return useMemo(() => translate(message), [message, translate]);
+export default function I18nText({ path, option }: InternationalizationProps) {
+  return useI18n(path, option);
 }

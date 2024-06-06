@@ -1,27 +1,21 @@
 'use client';
-import { useAppSelector } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { Alert, Snackbar } from '@mui/material';
-import { useEffect, useState } from 'react';
 import I18nText from '../i18nText/I18nText';
+import { closeError } from '@/lib/features/auth/authSlice';
 
 export default function ErrorAlert() {
-  const { error, errorMessage } = useAppSelector((state) => state.auth);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (error) {
-      setOpen(true);
-    }
-  }, [error]);
+  const { error } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
   const handleClose = () => {
-    setOpen(false);
+    dispatch(closeError());
   };
 
   return (
     error && (
       <Snackbar
-        open={open}
+        open={!!error}
         onClose={handleClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
@@ -31,7 +25,7 @@ export default function ErrorAlert() {
           variant="filled"
           sx={{ width: '100%' }}
         >
-          <I18nText path={errorMessage} />
+          <I18nText path={error} />
         </Alert>
       </Snackbar>
     )

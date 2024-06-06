@@ -5,10 +5,10 @@
     "TooManyRequests": "Количество запросов превышает максимально допустимое. Пожалуйста, повторите попытку позже",
     "UnexpectedErr": "Непредвиденная ошибка. Пожалуйста, повторите попытку позже",
     "EmailRequired": "Email обязателен",
-    "EmailMaxLength": "В email должно быть не более 50 символов",
+    "EmailMaxLength": "В email должно быть не более {maxEmailLength} символов",
     "EmailValid": "Адрес электронной почты должен быть валидным",
     "PasswordSpecify": "Вы должны указать пароль",
-    "PasswordMinLength": "Пароль должен содержать не менее 6 символов"
+    "PasswordMinLength": "Пароль должен содержать не менее {minPasswordLength} символов"
   },
   "LoginPage": {
     "Login": "Войти",

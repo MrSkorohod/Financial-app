@@ -17,7 +17,9 @@ export default function SignInForm() {
   const { loading } = useAppSelector((state) => state.auth);
 
   const emailRequired = useI18n('ErrorMessages.EmailRequired');
-  const emailMaxLength = useI18n('ErrorMessages.EmailMaxLength');
+  const emailMaxLength = useI18n('ErrorMessages.EmailMaxLength', {
+    maxEmailLength: String(maxEmailLength),
+  });
   const emailValid = useI18n('ErrorMessages.EmailValid');
 
   const {
@@ -78,6 +80,7 @@ export default function SignInForm() {
               value: minPasswordLength,
               message: I18nText({
                 path: 'ErrorMessages.PasswordMinLength',
+                option: { minPasswordLength: String(minPasswordLength) },
               }),
             },
           })}

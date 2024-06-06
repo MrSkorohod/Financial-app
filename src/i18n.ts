@@ -6,8 +6,8 @@ export default getRequestConfig(async () => {
   // read from `cookies()`, `headers()`, etc.
   const locale = 'en';
 
-  const userMessages = (await import(`../messages/${locale}.json`)).default;
-  const defaultMessages = (await import(`../messages/en.json`)).default;
+  const userMessages = (await import(`./messages/${locale}.json`)).default;
+  const defaultMessages = (await import(`./messages/en.json`)).default;
   const messages = deepmerge(defaultMessages, userMessages);
 
   return {

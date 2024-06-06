@@ -11,8 +11,7 @@ const authSlice = createSlice({
   initialState: {
     token: null as AuthToken,
     loading: false,
-    error: false,
-    errorMessage: '',
+    error: '',
     success: false,
     isSignIn: false,
   },
@@ -21,26 +20,28 @@ const authSlice = createSlice({
       state.isSignIn = true;
       state.token = action.payload || '';
     },
+    closeError(state) {
+      state.error = '';
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(signInThunk.pending, (state) => {
         state.loading = true;
         state.isSignIn = false;
-        state.error = false;
+        state.error = '';
       })
       .addCase(signInThunk.rejected, (state, action) => {
         state.loading = false;
         state.token = '';
-        state.error = true;
+        state.error = getErrorMessageByCode(action.payload);
         state.isSignIn = false;
-        state.errorMessage = getErrorMessageByCode(action.payload);
       })
       .addCase(signInThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.uid || '';
         state.isSignIn = true;
-        state.error = false;
+        state.error = '';
       });
 
     builder
@@ -55,31 +56,29 @@ const authSlice = createSlice({
       .addCase(signOutThunk.rejected, (state, action) => {
         state.loading = false;
         state.token = '';
-        state.error = true;
+        state.error = getErrorMessageByCode(action.payload);
         state.isSignIn = false;
-        state.errorMessage = getErrorMessageByCode(action.payload);
       });
     builder
       .addCase(registerThunk.pending, (state) => {
         state.loading = true;
-        state.error = false;
+        state.error = '';
       })
       .addCase(registerThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = false;
+        state.error = '';
         state.token = action.payload.uid || '';
       })
       .addCase(registerThunk.rejected, (state, action) => {
         state.loading = false;
         state.token = '';
-        state.error = true;
+        state.error = getErrorMessageByCode(action.payload);
         state.isSignIn = false;
-        state.errorMessage = getErrorMessageByCode(action.payload);
       });
   },
 });
 
-export const { setPersistenceSignIn } = authSlice.actions;
+export const { setPersistenceSignIn, closeError } = authSlice.actions;
 
 export default authSlice.reducer;
 
