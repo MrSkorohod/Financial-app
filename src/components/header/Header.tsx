@@ -14,6 +14,7 @@ import NextLink from 'next/link';
 import { AccountCircle } from '@mui/icons-material';
 import { useState } from 'react';
 import { useAuthContext } from '@/contexts/AuthContext';
+import I18nText from '../i18nText/I18nText';
 
 const pages = ['Dashboard', 'Account'];
 
@@ -51,7 +52,7 @@ export default function Header() {
               href={page.toLocaleLowerCase()}
               sx={{ color: 'white', display: 'block' }}
             >
-              {page}
+              <I18nText path={`Header.${page}`} />
             </Button>
           ))}
         </Box>
@@ -74,9 +75,15 @@ export default function Header() {
           transformOrigin={{ horizontal: 'right', vertical: 'top' }}
           anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
-          <MenuItem onClick={logOut}>Logout</MenuItem>
+          <MenuItem onClick={handleClose}>
+            <I18nText path={'Header.Profile'} />
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <I18nText path={'Header.MyAcc'} />
+          </MenuItem>
+          <MenuItem onClick={logOut}>
+            <I18nText path={'Header.Logout'} />
+          </MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>

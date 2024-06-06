@@ -1,5 +1,5 @@
 import Header from '@/components/header/Header';
-import AuthProtectedRoute from '@/components/protected-routes/AuthProtectedRoute';
+import AuthProtectedRoute from '@/components/protectedRoutes/AuthProtectedRoute';
 
 export default function MainApplicationLayout({
   children,

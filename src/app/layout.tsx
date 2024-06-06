@@ -3,6 +3,7 @@ import StoreProvider from '@/contexts/StoreProvider';
 import { AuthContextProvider } from '@/contexts/AuthContext';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import ErrorAlert from '@/components/errorAlert/ErrorAlert';
 
 export default async function RootLayout({
   children,
@@ -19,7 +20,10 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           <MainThemeContext>
             <StoreProvider>
-              <AuthContextProvider>{children}</AuthContextProvider>
+              <AuthContextProvider>
+                <ErrorAlert />
+                {children}
+              </AuthContextProvider>
             </StoreProvider>
           </MainThemeContext>
         </NextIntlClientProvider>

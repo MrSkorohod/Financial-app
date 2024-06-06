@@ -1,7 +1,8 @@
+'use client';
 import { useAppSelector } from '@/lib/hooks';
 import { Alert, Snackbar } from '@mui/material';
 import { useEffect, useState } from 'react';
-import InternationalizationText from '../internationalizationText/InternationalizationText';
+import I18nText from '../i18nText/I18nText';
 
 export default function ErrorAlert() {
   const { error, errorMessage } = useAppSelector((state) => state.auth);
@@ -30,7 +31,7 @@ export default function ErrorAlert() {
           variant="filled"
           sx={{ width: '100%' }}
         >
-          <InternationalizationText path={errorMessage} />
+          <I18nText path={errorMessage} />
         </Alert>
       </Snackbar>
     )

@@ -3,6 +3,25 @@
     "InvalidCredential": "Invalid credential. Please try again later",
     "ErrorInUse": "The provided email is already in use by an existing user",
     "TooManyRequests": "The number of requests exceeds the maximum allowed. Please try again later",
-    "UnexpectedErr": "Unexpected error. Please try again later"
+    "UnexpectedErr": "Unexpected error. Please try again later",
+    "EmailRequired": "Email is required",
+    "EmailMaxLength": "The email should have at most 50 characters",
+    "EmailValid": "Email address must be a valid address",
+    "PasswordSpecify": "You must specify a password",
+    "PasswordMinLength": "Password must have at least 6 characters"
+  },
+  "LoginPage": {
+    "Login": "Login",
+    "CreateUser": "Create User",
+    "Or": "or",
+    "Email": "Email",
+    "Password": "Password"
+  },
+  "Header": {
+    "Dashboard": "Dashboard",
+    "Account": "Account",
+    "Profile": "Profile",
+    "MyAcc": "My account",
+    "Logout": "Logout"
   }
 }
