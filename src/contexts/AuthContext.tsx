@@ -3,6 +3,7 @@ import { auth } from '@/firebase.config';
 import { registerThunk } from '@/lib/actionThunks/registerUser';
 import { signInThunk } from '@/lib/actionThunks/signInUser';
 import { signOutThunk } from '@/lib/actionThunks/signOutUser';
+import { userDataThunk } from '@/lib/actionThunks/userData';
 import { setPersistenceSignIn } from '@/lib/features/auth/authSlice';
 import { useAppDispatch } from '@/lib/hooks';
 import { User, onAuthStateChanged } from 'firebase/auth';
@@ -44,6 +45,7 @@ export const AuthContextProvider = ({ children }: PropsWithChildren) => {
       if (user) {
         setUser(user);
         dispatch(setPersistenceSignIn(user.uid));
+        dispatch(userDataThunk({ uid: user.uid }));
       } else {
         setUser(null);
         dispatch(setPersistenceSignIn(''));

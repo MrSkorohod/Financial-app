@@ -2,6 +2,7 @@ import { apiSlice } from '@/lib/features/api/apiSlice';
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './features/auth/authSlice';
 import userReducer from './features/user/userSlice';
+import dashboardReducer from './features/dashboards/dashboardsSlice';
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () => {
       [apiSlice.reducerPath]: apiSlice.reducer,
       auth: authReducer,
       user: userReducer,
+      dashboards: dashboardReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(apiSlice.middleware),
