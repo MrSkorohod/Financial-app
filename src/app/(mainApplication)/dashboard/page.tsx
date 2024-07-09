@@ -2,7 +2,6 @@
 import useUser from '@/hooks/useUser';
 import {
   getDashboardsDataThunk,
-  createDashboardDataThunk,
   deleteDashboardDataThunk,
 } from '@/lib/actionThunks/dashboardsData';
 import { getDashboards } from '@/lib/features/dashboards/dashboardsSlice';
@@ -10,35 +9,35 @@ import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import {
   Box,
   Typography,
-  Button,
   CircularProgress,
   IconButton,
+  Button,
 } from '@mui/material';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import theme from '../../../../theme';
+import CreateBox from '@/components/createBox/CreateBox';
+import DashboardDialog from '@/components/dashboardDialog/DashboardDialog';
 
 export default function Dashboard() {
   const dispatch = useAppDispatch();
   const user = useUser().user;
   const dashboards = useAppSelector(getDashboards);
   const { loading } = useAppSelector((state) => state.dashboards);
+  const [isOpen, setIsOpen] = useState(false);
+  const [editingDashboardUid, setEditingDashboardUid] = useState<string>('');
+
+  const handleModalState = () => {
+    setEditingDashboardUid('');
+    setIsOpen(!isOpen);
+  };
 
   useEffect(() => {
     if (user?.uid) {
       dispatch(getDashboardsDataThunk({ uid: user.uid }));
     }
   }, [dispatch, user?.uid]);
-
-  const addDashboard = () => {
-    dispatch(
-      createDashboardDataThunk({
-        uid: user?.uid || '',
-        cash: 0,
-        name: 'Test',
-      })
-    );
-  };
 
   const deleteDashboard = useCallback(
     (uid: string) => {
@@ -52,9 +51,16 @@ export default function Dashboard() {
     [dispatch, user?.uid]
   );
 
+  const openEditDashboard = useCallback((uid: string) => {
+    setEditingDashboardUid(uid);
+    setIsOpen(true);
+  }, []);
+
+  // console.log(dashboards);
+
   return (
     <>
-      <Box sx={{ position: 'relative', paddingLeft: '20px' }}>
+      <Box sx={{ position: 'relative', padding: '20px' }}>
         {loading && (
           <CircularProgress
             size={'64px'}
@@ -66,7 +72,8 @@ export default function Dashboard() {
           />
         )}
         <Box
-          display={'flex'}
+          display="flex"
+          flexWrap="wrap"
           sx={{
             minHeight: '80px',
             alignItems: 'center',
@@ -96,27 +103,43 @@ export default function Dashboard() {
                   {dashboard.cash}
                 </Typography>
               </Box>
-
-              <IconButton
-                aria-label="delete"
-                size="small"
-                color="secondary"
-                onClick={() => deleteDashboard(dashboard.uid)}
+              <Box
+                display="flex"
+                flexDirection="column"
               >
-                <DeleteIcon fontSize="inherit" />
-              </IconButton>
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  color="secondary"
+                  onClick={() => openEditDashboard(dashboard.uid)}
+                >
+                  <EditIcon fontSize="inherit" />
+                </IconButton>
+                <IconButton
+                  aria-label="delete"
+                  size="small"
+                  color="secondary"
+                  onClick={() => deleteDashboard(dashboard.uid)}
+                >
+                  <DeleteIcon fontSize="inherit" />
+                </IconButton>
+              </Box>
             </Box>
           ))}
+          <Button onClick={handleModalState}>
+            <CreateBox
+              // userUid={user?.uid || ''}
+              loading={loading}
+            />
+          </Button>
+
+          <DashboardDialog
+            dashboardUid={editingDashboardUid}
+            handleOpenState={handleModalState}
+            isOpen={isOpen}
+          />
         </Box>
       </Box>
-
-      <Button
-        variant="text"
-        color="primary"
-        onClick={addDashboard}
-      >
-        Button
-      </Button>
     </>
   );
 }

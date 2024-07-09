@@ -23,5 +23,12 @@
     "Profile": "Профиль",
     "MyAcc": "Мои счета",
     "Logout": "Выход"
+  },
+  "DashboardPage": {
+    "AddAccount": "Добавить счет",
+    "EditAccount": "Изменить {accountName} счет",
+    "Name": "Название",
+    "InitialAmount": "Начальное значение",
+    "Save": "Сохранить"
   }
 }

@@ -2,15 +2,17 @@ import {
   getDashboardsDataThunk,
   createDashboardDataThunk,
   deleteDashboardDataThunk,
+  editDashboardDataThunk,
 } from '@/lib/actionThunks/dashboardsData';
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '@/lib/store';
 import { getErrorMessageByCode } from '@/errorCodes';
 
-interface DashboardData {
+export interface DashboardData {
   name: string;
   cash: number;
   uid: string;
+  dateCreated: Date | string;
 }
 
 const dashboardsSlice = createSlice({
@@ -58,6 +60,21 @@ const dashboardsSlice = createSlice({
         state.dashboards = state.dashboards.filter(
           (item) => item.uid !== action.payload.dashboardUid
         );
+        state.loading = false;
+      });
+    builder
+      .addCase(editDashboardDataThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(editDashboardDataThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = getErrorMessageByCode(action.payload);
+      })
+      .addCase(editDashboardDataThunk.fulfilled, (state, action) => {
+        state.dashboards = [
+          ...state.dashboards.filter((item) => item.uid !== action.payload.uid),
+          action.payload,
+        ];
         state.loading = false;
       });
   },

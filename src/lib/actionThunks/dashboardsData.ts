@@ -8,12 +8,16 @@ import {
   getDocs,
   setDoc,
   deleteDoc,
+  updateDoc,
+  orderBy,
+  query,
 } from 'firebase/firestore';
 
 interface DashboardData {
   name: string;
   cash: number;
   uid: string;
+  dateCreated: Date | string;
 }
 
 export const getDashboardsDataThunk = createAsyncThunk<
@@ -22,14 +26,18 @@ export const getDashboardsDataThunk = createAsyncThunk<
   {
     rejectValue: FirebaseErrorCode | CommonErrorCode;
   }
->('users/get-dashboard', async (userUid, { rejectWithValue }) => {
+>('users/get-dashboards', async (userUid, { rejectWithValue }) => {
   const { uid } = userUid;
   try {
-    const docCollection = await getDocs(
-      collection(db, 'users', uid, 'dashboards')
+    const collectionData = query(
+      collection(db, 'users', uid, 'dashboards'),
+      orderBy('dateCreated', 'asc')
     );
+    const docCollection = await getDocs(collectionData);
+
     const result = docCollection.docs.map((item) => ({
       ...item.data(),
+      dateCreated: item.data().dateCreated.toDate().toString(),
       uid: item.id,
     }));
     return result as DashboardData[];
@@ -42,21 +50,22 @@ export const getDashboardsDataThunk = createAsyncThunk<
 });
 
 export const createDashboardDataThunk = createAsyncThunk<
-  { uid: string } & DashboardData,
-  { uid: string } & DashboardData,
+  DashboardData,
+  { userUid: string; cash: number; name: string },
   {
     rejectValue: FirebaseErrorCode | CommonErrorCode;
   }
->('users/set-dashboard', async (dashboardData, { rejectWithValue }) => {
-  const { uid, cash, name } = dashboardData;
+>('users/create-dashboard', async (dashboardData, { rejectWithValue }) => {
+  const { userUid, cash, name } = dashboardData;
 
   try {
-    const docDashboard = doc(collection(db, 'users', uid, 'dashboards'));
+    const docDashboard = doc(collection(db, 'users', userUid, 'dashboards'));
     await setDoc(docDashboard, {
       cash,
       name,
+      dateCreated: new Date(),
     });
-    return { uid: docDashboard.id, cash, name };
+    return { uid: docDashboard.id, cash, name, dateCreated: new Date() };
   } catch (error) {
     if (error instanceof FirebaseError) {
       return rejectWithValue(error.code as FirebaseErrorCode);
@@ -77,6 +86,30 @@ export const deleteDashboardDataThunk = createAsyncThunk<
     const docDashboard = doc(db, 'users', userUid, 'dashboards', dashboardUid);
     await deleteDoc(docDashboard);
     return { dashboardUid };
+  } catch (error) {
+    if (error instanceof FirebaseError) {
+      return rejectWithValue(error.code as FirebaseErrorCode);
+    }
+    return rejectWithValue(CommonErrorCode.UnexpectedErr);
+  }
+});
+
+export const editDashboardDataThunk = createAsyncThunk<
+  DashboardData,
+  { userUid: string } & DashboardData,
+  {
+    rejectValue: FirebaseErrorCode | CommonErrorCode;
+  }
+>('users/edit-dashboard', async (dashboardData, { rejectWithValue }) => {
+  const { userUid, uid, cash, name } = dashboardData;
+  try {
+    const docDashboard = doc(db, 'users', userUid, 'dashboards', uid);
+    await updateDoc(docDashboard, {
+      cash,
+      name,
+      dateCreated: new Date(),
+    });
+    return dashboardData;
   } catch (error) {
     if (error instanceof FirebaseError) {
       return rejectWithValue(error.code as FirebaseErrorCode);
