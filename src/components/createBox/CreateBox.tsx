@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import theme from '../../../theme';
 import I18nText from '../i18nText/I18nText';
 
-export default function CreateBox({ loading }: { loading: boolean }) {
+const CreateBox = ({ loading }: { loading: boolean }) => {
   return (
     <Box
       sx={{
@@ -27,4 +27,6 @@ export default function CreateBox({ loading }: { loading: boolean }) {
       + <I18nText path={'DashboardPage.AddAccount'} />
     </Box>
   );
-}
+};
+
+export default CreateBox;

@@ -1,67 +1,52 @@
 'use client';
 import useUser from '@/hooks/useUser';
 import {
-  getDashboardsDataThunk,
-  deleteDashboardDataThunk,
-} from '@/lib/actionThunks/dashboardsData';
-import { getDashboards } from '@/lib/features/dashboards/dashboardsSlice';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import {
   Box,
   Typography,
   CircularProgress,
   IconButton,
   Button,
 } from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import theme from '../../../../theme';
 import CreateBox from '@/components/createBox/CreateBox';
 import DashboardDialog from '@/components/dashboardDialog/DashboardDialog';
+import {
+  useDeleteDashboardMutation,
+  useGetDashboardsQuery,
+} from '@/lib/features/dashboards/dashboards';
 
 export default function Dashboard() {
-  const dispatch = useAppDispatch();
   const user = useUser().user;
-  const dashboards = useAppSelector(getDashboards);
-  const { loading } = useAppSelector((state) => state.dashboards);
   const [isOpen, setIsOpen] = useState(false);
   const [editingDashboardUid, setEditingDashboardUid] = useState<string>('');
+  const { isFetching, data: dashboards } = useGetDashboardsQuery(
+    user?.uid || ''
+  );
+  const [deleteDashboard] = useDeleteDashboardMutation();
+
+  const handleDeleteDashboard = (dashboardUid: string) =>
+    deleteDashboard({
+      userUid: user?.uid || '',
+      dashboardUid,
+    });
 
   const handleModalState = () => {
     setEditingDashboardUid('');
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    if (user?.uid) {
-      dispatch(getDashboardsDataThunk({ uid: user.uid }));
-    }
-  }, [dispatch, user?.uid]);
-
-  const deleteDashboard = useCallback(
-    (uid: string) => {
-      dispatch(
-        deleteDashboardDataThunk({
-          userUid: user?.uid || '',
-          dashboardUid: uid,
-        })
-      );
-    },
-    [dispatch, user?.uid]
-  );
-
-  const openEditDashboard = useCallback((uid: string) => {
+  const openEditDashboard = (uid: string) => {
     setEditingDashboardUid(uid);
     setIsOpen(true);
-  }, []);
-
-  // console.log(dashboards);
+  };
 
   return (
     <>
       <Box sx={{ position: 'relative', padding: '20px' }}>
-        {loading && (
+        {isFetching && (
           <CircularProgress
             size={'64px'}
             sx={{
@@ -79,11 +64,11 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         >
-          {dashboards.map((dashboard) => (
+          {dashboards?.map((dashboard) => (
             <Box
               key={dashboard.uid}
               sx={{
-                opacity: loading ? 0.6 : 1,
+                opacity: isFetching ? 0.6 : 1,
                 width: '200px',
                 minHeight: '50px',
                 bgcolor: theme.palette.primary.main,
@@ -119,7 +104,7 @@ export default function Dashboard() {
                   aria-label="delete"
                   size="small"
                   color="secondary"
-                  onClick={() => deleteDashboard(dashboard.uid)}
+                  onClick={() => handleDeleteDashboard(dashboard.uid)}
                 >
                   <DeleteIcon fontSize="inherit" />
                 </IconButton>
@@ -127,10 +112,7 @@ export default function Dashboard() {
             </Box>
           ))}
           <Button onClick={handleModalState}>
-            <CreateBox
-              // userUid={user?.uid || ''}
-              loading={loading}
-            />
+            <CreateBox loading={isFetching} />
           </Button>
 
           <DashboardDialog

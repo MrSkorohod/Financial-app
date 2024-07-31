@@ -10,14 +10,14 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import I18nText from '../i18nText/I18nText';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import useUser from '@/hooks/useUser';
-import {
-  createDashboardDataThunk,
-  editDashboardDataThunk,
-} from '@/lib/actionThunks/dashboardsData';
-import { DashboardData } from '@/lib/features/dashboards/dashboardsSlice';
 import { useEffect, useMemo } from 'react';
+import {
+  DashboardData,
+  useCreateDashboardMutation,
+  useGetDashboardsQuery,
+  useUpdateDashboardMutation,
+} from '@/lib/features/dashboards/dashboards';
 
 type FormValues = {
   name: string;
@@ -33,32 +33,25 @@ export default function DashboardDialog({
   handleOpenState: () => void;
   isOpen: boolean;
 }) {
-  const { loading, dashboards } = useAppSelector((state) => state.dashboards);
   const user = useUser().user;
-  const dispatch = useAppDispatch();
+  const { isLoading, data: dashboards } = useGetDashboardsQuery(
+    user?.uid || ''
+  );
 
-  const addDashboard = (name: string, cash: number) => {
-    dispatch(
-      createDashboardDataThunk({
-        userUid: user?.uid || '',
-        cash,
-        name,
-      })
-    );
-  };
-  const editDashboard = (uid: string, name: string, cash: number) => {
-    dispatch(
-      editDashboardDataThunk({
-        userUid: user?.uid || '',
-        uid,
-        cash,
-        name,
-        dateCreated: new Date(),
-      })
-    );
-  };
+  const [createDashboard] = useCreateDashboardMutation();
+  const [updateDashboard] = useUpdateDashboardMutation();
+
+  const editDashboard = (uid: string, name: string, cash: number) =>
+    updateDashboard({
+      userUid: user?.uid || '',
+      uid,
+      cash,
+      name,
+    });
+
   const dashboardData = useMemo(() => {
-    return dashboards.filter((item) => item.uid !== dashboardUid).length > 1
+    return dashboards &&
+      dashboards.filter((item) => item.uid !== dashboardUid).length > 1
       ? dashboards.filter((item) => item.uid === dashboardUid)[0]
       : ({ name: '', cash: 0 } as DashboardData);
   }, [dashboardUid, dashboards]);
@@ -77,7 +70,11 @@ export default function DashboardDialog({
   }) => {
     dashboardUid
       ? editDashboard(dashboardUid, data.name, Number(data.cash))
-      : addDashboard(data.name, Number(data.cash));
+      : createDashboard({
+          userUid: user?.uid || '',
+          name: data.name,
+          cash: Number(data.cash),
+        });
     reset();
     handleClose();
   };
@@ -139,7 +136,7 @@ export default function DashboardDialog({
           aria-invalid={errors.name ? 'true' : 'false'}
           error={!!errors.name}
           helperText={errors.name?.message && `${errors.name.message}`}
-          disabled={loading}
+          disabled={isLoading}
         />
         <TextField
           label={I18nText({ path: 'DashboardPage.InitialAmount' })}
@@ -150,7 +147,7 @@ export default function DashboardDialog({
           error={!!errors.cash}
           type="number"
           helperText={errors.cash?.message && `${errors.cash.message}`}
-          disabled={loading}
+          disabled={isLoading}
         />
       </DialogContent>
       <DialogActions>

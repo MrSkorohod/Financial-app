@@ -4,7 +4,7 @@ import { Alert, Snackbar } from '@mui/material';
 import I18nText from '../i18nText/I18nText';
 import { closeError } from '@/lib/features/auth/authSlice';
 
-export default function ErrorAlert() {
+const ErrorAlert = () => {
   const { error } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
@@ -30,4 +30,6 @@ export default function ErrorAlert() {
       </Snackbar>
     )
   );
-}
+};
+
+export default ErrorAlert;

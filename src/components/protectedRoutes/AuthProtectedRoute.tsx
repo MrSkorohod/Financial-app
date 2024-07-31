@@ -9,10 +9,10 @@ interface ProtectRouteProps {
   permissionRule?: boolean;
 }
 
-export default function AuthProtectedRoute({
+const AuthProtectedRoute = ({
   children,
   permissionRule = true,
-}: ProtectRouteProps) {
+}: ProtectRouteProps) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const route = useRouter();
   const pathname = usePathname();
@@ -25,4 +25,6 @@ export default function AuthProtectedRoute({
   }, [isAuthenticated, route, pathname, permissionRule]);
 
   return isAuthenticated && permissionRule ? children : <></>;
-}
+};
+
+export default AuthProtectedRoute;
