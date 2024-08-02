@@ -6,6 +6,8 @@ type InternationalizationProps = {
   option?: Record<string, string>;
 };
 
-export default function I18nText({ path, option }: InternationalizationProps) {
+const I18nText = ({ path, option }: InternationalizationProps) => {
   return useI18n(path, option);
-}
+};
+
+export default I18nText;

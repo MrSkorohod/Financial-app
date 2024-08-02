@@ -4,11 +4,7 @@ import { useAppSelector } from '@/lib/hooks';
 import { useRouter } from 'next/navigation';
 import { useLayoutEffect } from 'react';
 
-export default function LoginProtectedRoute({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+const LoginProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const route = useRouter();
 
@@ -19,4 +15,6 @@ export default function LoginProtectedRoute({
   }, [isAuthenticated, route]);
 
   return isAuthenticated || isAuthenticated === null ? <></> : children;
-}
+};
+
+export default LoginProtectedRoute;

@@ -23,5 +23,12 @@
     "Profile": "Profile",
     "MyAcc": "My account",
     "Logout": "Logout"
+  },
+  "DashboardPage": {
+    "AddAccount": "Add Account",
+    "EditAccount": "Edit {accountName} Account",
+    "Name": "Name",
+    "InitialAmount": "Initial Amount",
+    "Save": "Save"
   }
 }

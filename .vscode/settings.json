@@ -20,5 +20,8 @@
   "prettier.tabWidth": 2,
   "prettier.trailingComma": "es5",
   "prettier.useTabs": false,
-  "prettier.embeddedLanguageFormatting": "auto"
+  "prettier.embeddedLanguageFormatting": "auto",
+  "cSpell.words": [
+    "Firestore"
+  ]
 }

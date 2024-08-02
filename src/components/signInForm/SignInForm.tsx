@@ -12,7 +12,7 @@ type FormValues = {
   password: string;
 };
 
-export default function SignInForm() {
+const SignInForm = () => {
   const { logIn, registerUser } = useAuthContext();
   const { loading } = useAppSelector((state) => state.auth);
 
@@ -109,4 +109,6 @@ export default function SignInForm() {
       </Box>
     </Box>
   );
-}
+};
+
+export default SignInForm;

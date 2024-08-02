@@ -1,3 +1,4 @@
+import { userDataThunk } from '@/lib/actionThunks/userData';
 import { RootState } from '@/lib/store';
 import { User } from '@/utils';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
@@ -14,6 +15,15 @@ const userSlice = createSlice({
     removeUser: (state) => {
       state.user = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(userDataThunk.rejected, (state) => {
+        state.user = null;
+      })
+      .addCase(userDataThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+      });
   },
 });
 

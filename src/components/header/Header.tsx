@@ -18,7 +18,7 @@ import I18nText from '../i18nText/I18nText';
 
 const pages = ['Dashboard', 'Account'];
 
-export default function Header() {
+const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { logOut } = useAuthContext();
 
@@ -88,4 +88,6 @@ export default function Header() {
       </Toolbar>
     </AppBar>
   );
-}
+};
+
+export default Header;
